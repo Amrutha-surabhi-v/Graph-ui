@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    { "id": "1", "label": "Ahmed Hassan", "type": "person", "x": 400, "y": 300 },
+    { "id": "2", "label": "ahmed@techcorp.ae", "type": "email", "x": 150, "y": 100 },
+    { "id": "3", "label": "techcorp.com", "type": "domain", "x": 700, "y": 250 },
+    { "id": "4", "label": "LinkedIn", "type": "social", "x": 700, "y": 100 },
+    { "id": "5", "label": "Financial Risk", "type": "risk", "x": 500, "y": 550 },
+
+    { "id": "6", "label": "Sara Khan", "type": "person", "x": 900, "y": 300 },
+    { "id": "7", "label": "sara.khan@finedge.io", "type": "email", "x": 1150, "y": 150 },
+    { "id": "8", "label": "finedge.io", "type": "domain", "x": 1150, "y": 350 },
+    { "id": "9", "label": "Twitter", "type": "social", "x": 1150, "y": 500 },
+    { "id": "10", "label": "Fraud Alert", "type": "risk", "x": 900, "y": 550 },
+
+    { "id": "11", "label": "John Mathew", "type": "person", "x": 400, "y": 700 },
+    { "id": "12", "label": "john.mathew@globaltrade.in", "type": "email", "x": 150, "y": 650 },
+    { "id": "13", "label": "globaltrade.in", "type": "domain", "x": 650, "y": 850 },
+    { "id": "14", "label": "Instagram", "type": "social", "x": 250, "y": 850 },
+    { "id": "15", "label": "Suspicious Links", "type": "risk", "x": 600, "y": 650 }
+  ],
+  "edges": [
+    { "id": "e1-2", "source": "1", "target": "2", "label": "HAS_EMAIL" },
+    { "id": "e1-3", "source": "1", "target": "3", "label": "OWNS_DOMAIN" },
+    { "id": "e1-4", "source": "1", "target": "4", "label": "EXPOSED_IN" },
+    { "id": "e1-5", "source": "1", "target": "5", "label": "ASSOCIATED_WITH" },
+
+    { "id": "e6-7", "source": "6", "target": "7", "label": "HAS_EMAIL" },
+    { "id": "e6-8", "source": "6", "target": "8", "label": "WORKS_AT" },
+    { "id": "e6-9", "source": "6", "target": "9", "label": "ACTIVE_ON" },
+    { "id": "e6-10", "source": "6", "target": "10", "label": "LINKED_TO" },
+
+    { "id": "e11-12", "source": "11", "target": "12", "label": "HAS_EMAIL" },
+    { "id": "e11-13", "source": "11", "target": "13", "label": "WORKS_AT" },
+    { "id": "e11-14", "source": "11", "target": "14", "label": "ACTIVE_ON" },
+    { "id": "e11-15", "source": "11", "target": "15", "label": "RELATED_TO" },
+
+    { "id": "e3-8", "source": "3", "target": "8", "label": "CONNECTED_DOMAIN" },
+    { "id": "e5-10", "source": "5", "target": "10", "label": "RISK_CHAIN" },
+    { "id": "e10-15", "source": "10", "target": "15", "label": "RISK_CHAIN" }
+  ]
+}

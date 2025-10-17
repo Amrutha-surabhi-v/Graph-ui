@@ -1,103 +1,141 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useEffect, useCallback } from "react";
+import ReactFlow, {
+  addEdge,
+  Background,
+  Controls,
+  MiniMap,
+  useEdgesState,
+  useNodesState,
+  Connection,
+  Edge,
+  Node,
+  MarkerType,
+} from "reactflow";
+import "reactflow/dist/style.css";
+
+type GraphNode = {
+  id: string;
+  label: string;
+  type: string;
+  x: number;
+  y: number;
+};
+
+type GraphEdge = {
+  id: string;
+  source: string;
+  target: string;
+  label: string;
+};
+
+export default function HomePage() {
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>([]);
+
+  useEffect(() => {
+    fetch("/data/graphdata.json")
+      .then(async (res) => {
+        const contentType = res.headers.get("content-type") || "";
+        const statusInfo = `${res.status} ${res.statusText}`;
+        const bodyText = await res.text();
+
+        if (!res.ok) {
+          console.error("Graph data fetch failed:", { statusInfo, contentType, bodyPreview: bodyText.slice(0, 200) });
+          throw new Error(`Failed to load graph data: ${statusInfo}`);
+        }
+
+        try {
+          return JSON.parse(bodyText);
+        } catch (err) {
+          console.error("Failed to parse graph JSON:", { contentType, statusInfo, bodyPreview: bodyText.slice(0, 200) });
+          throw err;
+        }
+      })
+      .then((data) => {
+        const typeStyles: Record<string, { color: string; icon: string }> = {
+          person: { color: "#60a5fa", icon: "👤" },
+          email: { color: "#f59e0b", icon: "📧" },
+          domain: { color: "#22c55e", icon: "🌐" },
+          social: { color: "#0ea5e9", icon: "💬" },
+          risk: { color: "#ef4444", icon: "⚠️" }
+        };
+
+        const formattedNodes: Node[] = data.nodes.map((n: GraphNode) => {
+          const style = typeStyles[n.type] || { color: "#9ca3af", icon: "🔘" };
+          return {
+            id: n.id,
+            type: "default",
+            position: { x: n.x, y: n.y },
+            data: { label: `${style.icon} ${n.label}` },
+            style: {
+              border: `2px solid ${style.color}`,
+              borderRadius: 12,
+              background: "#111827",
+              color: "#fff",
+              padding: 10,
+              fontSize: 14,
+              width: 150,
+              textAlign: "center",
+              boxShadow: `0 0 10px ${style.color}50`,
+            },
+          };
+        });
+
+        const formattedEdges: Edge[] = data.edges.map((e: GraphEdge) => ({
+          id: e.id,
+          source: e.source,
+          target: e.target,
+          type: "smoothstep",
+          label: e.label,
+          markerEnd: { type: MarkerType.ArrowClosed, color: "#60a5fa" },
+          style: { stroke: "#60a5fa", strokeWidth: 2 },
+          labelStyle: { fill: "white", fontWeight: 600, fontSize: 12 },
+          labelBgStyle: {
+            fill: "#1f2937",
+            fillOpacity: 0.8,
+            color: "#fff",
+          },
+          labelBgPadding: [6, 3],
+          labelBgBorderRadius: 4,
+        }));
+
+        setNodes(formattedNodes);
+        setEdges(formattedEdges);
+      })
+      .catch((err) => {
+        console.error("Error fetching graph data:", err);
+      });
+  }, [setNodes, setEdges]);
+
+  const onConnect = useCallback(
+    (params: Edge | Connection) =>
+      setEdges((eds) => addEdge({ ...params }, eds)), // ❌ No animation
+    [setEdges]
+  );
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="w-screen h-screen bg-gray-950 text-white">
+      <h1 className="text-center text-3xl font-bold p-4">
+        🕸️ Multi-Person Maltego Graph
+      </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      <div className="w-full h-[90vh]">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          fitView
+          nodesDraggable
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <MiniMap nodeColor={() => "#60a5fa"} />
+          <Controls />
+          <Background color="#333" gap={20} />
+        </ReactFlow>
+      </div>
     </div>
   );
 }
