@@ -9,17 +9,7 @@
     { "id": "6", "label": "Sara Khan", "type": "person" },
     { "id": "7", "label": "sara.khan@finedge.io", "type": "email" },
     { "id": "8", "label": "finedge.io", "type": "domain" },
-    { "id": "9", "label": "Twitter", "type": "social" },
-
-    { "id": "10", "label": "John Mathew", "type": "person" },
-    { "id": "11", "label": "john.mathew@globaltrade.in", "type": "email" },
-    { "id": "12", "label": "globaltrade.in", "type": "domain" },
-    { "id": "13", "label": "Instagram", "type": "social" },
-
-    { "id": "14", "label": "abc", "type": "person" },
-    { "id": "15", "label": "abc@globaltrade.in", "type": "email" },
-    { "id": "16", "label": "globaltrade.in", "type": "domain" },
-    { "id": "17", "label": "Instagram", "type": "social" }
+    { "id": "9", "label": "Twitter", "type": "social" }
   ],
   "edges": [
     { "id": "e1-2", "source": "1", "target": "2", "label": "HAS_EMAIL" },
@@ -30,16 +20,6 @@
     { "id": "e6-7", "source": "6", "target": "7", "label": "HAS_EMAIL" },
     { "id": "e6-8", "source": "6", "target": "8", "label": "WORKS_AT" },
     { "id": "e6-9", "source": "6", "target": "9", "label": "ACTIVE_ON" },
-    { "id": "e1-6", "source": "1", "target": "6", "label": "FRIENDS_WITH" },
-    
-
-    { "id": "e10-11", "source": "10", "target": "11", "label": "HAS_EMAIL" },
-    { "id": "e10-12", "source": "10", "target": "12", "label": "WORKS_AT" },
-    { "id": "e10-13", "source": "10", "target": "13", "label": "ACTIVE_ON" },
-
-    { "id": "e14-15", "source": "14", "target": "15", "label": "HAS_EMAIL" },
-    { "id": "e14-16", "source": "14", "target": "16", "label": "WORKS_AT" },
-    { "id": "e14-17", "source": "14", "target": "17", "label": "ACTIVE_ON" },
-    { "id": "e14-10", "source": "14", "target": "10", "label": "COLLEAGUE_OF" }
+    { "id": "e1-6", "source": "1", "target": "6", "label": "FRIENDS_WITH" }
   ]
 }
